@@ -1,5 +1,5 @@
-// 193 UN Member States divided across 4 difficulty levels
-// Numbers are continuous: Easy 1-48, Medium 49-96, Hard 97-144, Impossible 145-193
+// 193 UN Member States + 2 observer states divided across 4 difficulty levels
+// Numbers are continuous: Easy 1-48, Medium 49-96, Hard 97-144, Impossible 145-195
 
 export const flags = [
   // ── EASY (1–48): World's most recognisable flags ──────────────────────────
@@ -202,6 +202,8 @@ export const flags = [
   { id: 191, name: "Saint Lucia",                code: "lc", difficulty: "impossible" },
   { id: 192, name: "Saint Vincent and the Grenadines", code: "vc", difficulty: "impossible" },
   { id: 193, name: "Antigua and Barbuda",        code: "ag", difficulty: "impossible" },
+  { id: 194, name: "Vatican City",               code: "va", difficulty: "impossible" },
+  { id: 195, name: "Palestine",                  code: "ps", difficulty: "impossible" },
 ];
 
 export const difficultyMeta = {
