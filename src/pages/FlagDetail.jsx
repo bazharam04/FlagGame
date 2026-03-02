@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { getFlagById, difficultyMeta } from "../data/flags";
 import { AWARDS, MILESTONES } from "../data/awards";
 import AwardBanner from "../components/AwardBanner";
@@ -7,6 +7,7 @@ import AwardBanner from "../components/AwardBanner";
 export default function FlagDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const flag = getFlagById(id);
 
   const [nameRevealed, setNameRevealed] = useState(false);
@@ -35,7 +36,12 @@ export default function FlagDetail() {
   }, [flag?.id]);
 
   function goBack() {
-    navigate("/world-quiz", { state: { activeTab: flag?.difficulty || "easy" } });
+    const from = location.state?.from;
+    if (from?.startsWith("/continent/")) {
+      navigate(from);
+    } else {
+      navigate("/world-quiz", { state: { activeTab: flag?.difficulty || "easy" } });
+    }
   }
 
   if (!flag) {

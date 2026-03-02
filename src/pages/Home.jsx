@@ -6,7 +6,7 @@ export default function Home() {
   const navigate = useNavigate();
 
   function handleContinentClick(continent) {
-    alert(`You selected ${continent.name}! Quiz coming soon! 🎉`);
+    navigate(`/continent/${continent.id}`);
   }
 
   return (
@@ -26,7 +26,7 @@ export default function Home() {
         <div className="title-wrapper">
           <div className="title-icon">🗺️</div>
           <h1 className="main-title">
-            <span className="title-adhi">ADHI</span>
+            <span className="title-adhi">ADHI'S</span>
             <span className="title-flag"> FLAG </span>
             <span className="title-journey">JOURNEY</span>
           </h1>
