@@ -86,7 +86,7 @@ export default function ContinentQuiz() {
           </div>
         </div>
         <button className="wq-reset-btn" onClick={handleReset}>
-          🔄 RESET
+          🔄
         </button>
       </div>
 

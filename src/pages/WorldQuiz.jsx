@@ -88,7 +88,7 @@ export default function WorldQuiz() {
           })}
         </div>
         <button className="wq-reset-btn" onClick={handleReset}>
-          🔄 RESET
+          🔄
         </button>
       </div>
 

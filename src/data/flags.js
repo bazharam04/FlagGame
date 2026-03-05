@@ -138,7 +138,7 @@ export const flags = [
   { id: 129, name: "Namibia",                    code: "na", difficulty: "hard" },
   { id: 130, name: "Botswana",                   code: "bw", difficulty: "hard" },
   { id: 131, name: "Lesotho",                    code: "ls", difficulty: "hard" },
-  { id: 132, name: "Eswatini",                   code: "sz", difficulty: "hard" },
+  { id: 132, name: "Swaziland",                  code: "sz", difficulty: "hard" },
   { id: 133, name: "Venezuela",                  code: "ve", difficulty: "hard" },
   { id: 134, name: "Guyana",                     code: "gy", difficulty: "hard" },
   { id: 135, name: "Suriname",                   code: "sr", difficulty: "hard" },

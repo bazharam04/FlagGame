@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { getFlagById, difficultyMeta } from "../data/flags";
 import { AWARDS, MILESTONES } from "../data/awards";
@@ -15,6 +15,14 @@ export default function FlagDetail() {
   const [imgLoaded, setImgLoaded]       = useState(false);
   const [imgError, setImgError]         = useState(false);
   const [currentAward, setCurrentAward] = useState(null);
+  const clickTimer = useRef(null);
+
+  useEffect(() => {
+    setNameRevealed(false);
+    setSpeaking(false);
+    setImgLoaded(false);
+    setImgError(false);
+  }, [flag?.id]);
 
   useEffect(() => {
     if (!flag) return;
@@ -42,6 +50,11 @@ export default function FlagDetail() {
     } else {
       navigate("/world-quiz", { state: { activeTab: flag?.difficulty || "easy" } });
     }
+  }
+
+  function goNext() {
+    const nextId = flag.id + 1;
+    navigate(`/flag/${nextId}`, { state: location.state });
   }
 
   if (!flag) {
@@ -72,6 +85,16 @@ export default function FlagDetail() {
     window.speechSynthesis.speak(utterance);
   }
 
+  function handleFlagClick() {
+    clearTimeout(clickTimer.current);
+    clickTimer.current = setTimeout(() => handleNameReveal(), 220);
+  }
+
+  function handleFlagDoubleClick() {
+    clearTimeout(clickTimer.current);
+    if (flag.id < 193) goNext();
+  }
+
   return (
     <div className="fd-page" style={{ "--d-color": meta.color, "--d-shadow": meta.shadow }}>
       {/* Floating shapes */}
@@ -84,11 +107,13 @@ export default function FlagDetail() {
         <div className="shape shape-6">💫</div>
       </div>
 
-      {/* Back button */}
-      <button className="back-btn" onClick={goBack}>← Back</button>
-
       {/* Flag image */}
-      <div className={`fd-flag-frame ${imgLoaded ? "fd-flag-frame--loaded" : ""}`}>
+      <div
+        className={`fd-flag-frame ${imgLoaded ? "fd-flag-frame--loaded" : ""}`}
+        onClick={handleFlagClick}
+        onDoubleClick={handleFlagDoubleClick}
+        style={{ cursor: "pointer" }}
+      >
         {!imgError ? (
           <img
             src={flagUrl}
@@ -113,14 +138,24 @@ export default function FlagDetail() {
         )}
       </div>
 
-      {/* Name button */}
-      <button
-        className={`fd-name-btn ${speaking ? "fd-name-btn--speaking" : ""}`}
-        style={{ background: meta.color, boxShadow: `0 7px 0 ${meta.shadow}` }}
-        onClick={handleNameReveal}
-      >
-        {speaking ? <>🔊 Speaking...</> : nameRevealed ? <>🔊 Say it again!</> : <>🏷️ NAME</>}
-      </button>
+      {/* Button row: Back | Name | Next */}
+      <div className="fd-btn-row">
+        <button className="back-btn" onClick={goBack}>← Back</button>
+        <button
+          className={`fd-name-btn ${speaking ? "fd-name-btn--speaking" : ""}`}
+          style={{ background: meta.color, boxShadow: `0 7px 0 ${meta.shadow}` }}
+          onClick={handleNameReveal}
+        >
+          {speaking ? <>🔊 Speaking...</> : nameRevealed ? <>🔊 Say it again!</> : <>🏷️ NAME</>}
+        </button>
+        {flag.id < 193 ? (
+          <button className="next-btn" style={{ background: meta.color, boxShadow: `0 4px 0 ${meta.shadow}` }} onClick={goNext}>
+            Next →
+          </button>
+        ) : (
+          <div style={{ width: "80px" }} />
+        )}
+      </div>
 
       {/* Award banner overlay */}
       {currentAward && (
