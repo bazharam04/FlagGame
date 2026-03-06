@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { getFlagById, difficultyMeta } from "../data/flags";
+import { flags, getFlagById, difficultyMeta } from "../data/flags";
 import { AWARDS, MILESTONES } from "../data/awards";
 import AwardBanner from "../components/AwardBanner";
 
@@ -15,6 +15,7 @@ export default function FlagDetail() {
   const [imgLoaded, setImgLoaded]       = useState(false);
   const [imgError, setImgError]         = useState(false);
   const [currentAward, setCurrentAward] = useState(null);
+  const [visitedCount, setVisitedCount] = useState(0);
   const clickTimer = useRef(null);
 
   useEffect(() => {
@@ -34,6 +35,7 @@ export default function FlagDetail() {
 
     stored.add(flag.id);
     localStorage.setItem("adhi-visited-flags", JSON.stringify([...stored]));
+    setVisitedCount(stored.size);
 
     // Fire the matching award the first time each milestone is crossed
     if (isNew && MILESTONES.includes(stored.size)) {
@@ -53,8 +55,11 @@ export default function FlagDetail() {
   }
 
   function goNext() {
-    const nextId = flag.id + 1;
-    navigate(`/flag/${nextId}`, { state: location.state });
+    const visited = new Set(
+      JSON.parse(localStorage.getItem("adhi-visited-flags") || "[]")
+    );
+    const nextFlag = flags.find((f) => f.id > flag.id && !visited.has(f.id));
+    if (nextFlag) navigate(`/flag/${nextFlag.id}`, { state: location.state });
   }
 
   if (!flag) {
@@ -92,7 +97,7 @@ export default function FlagDetail() {
 
   function handleFlagDoubleClick() {
     clearTimeout(clickTimer.current);
-    if (flag.id < 193) goNext();
+    goNext();
   }
 
   return (
@@ -108,23 +113,26 @@ export default function FlagDetail() {
       </div>
 
       {/* Flag image */}
-      <div
-        className={`fd-flag-frame ${imgLoaded ? "fd-flag-frame--loaded" : ""}`}
-        onClick={handleFlagClick}
-        onDoubleClick={handleFlagDoubleClick}
-        style={{ cursor: "pointer" }}
-      >
-        {!imgError ? (
-          <img
-            src={flagUrl}
-            alt="mystery flag"
-            className="fd-flag-img"
-            onLoad={() => setImgLoaded(true)}
-            onError={() => { setImgError(true); setImgLoaded(true); }}
-          />
-        ) : (
-          <div className="fd-flag-fallback">🏳️</div>
-        )}
+      <div className="fd-flag-wrapper">
+        <div className="fd-visited-badge">{visitedCount}</div>
+        <div
+          className={`fd-flag-frame ${imgLoaded ? "fd-flag-frame--loaded" : ""}`}
+          onClick={handleFlagClick}
+          onDoubleClick={handleFlagDoubleClick}
+          style={{ cursor: "pointer" }}
+        >
+          {!imgError ? (
+            <img
+              src={flagUrl}
+              alt="mystery flag"
+              className="fd-flag-img"
+              onLoad={() => setImgLoaded(true)}
+              onError={() => { setImgError(true); setImgLoaded(true); }}
+            />
+          ) : (
+            <div className="fd-flag-fallback">🏳️</div>
+          )}
+        </div>
       </div>
 
       {/* Name reveal area */}
@@ -148,7 +156,7 @@ export default function FlagDetail() {
         >
           {speaking ? <>🔊 Speaking...</> : nameRevealed ? <>🔊 Say it again!</> : <>🏷️ NAME</>}
         </button>
-        {flag.id < 193 ? (
+        {flags.some((f) => f.id > flag.id && !JSON.parse(localStorage.getItem("adhi-visited-flags") || "[]").includes(f.id)) ? (
           <button className="next-btn" style={{ background: meta.color, boxShadow: `0 4px 0 ${meta.shadow}` }} onClick={goNext}>
             Next →
           </button>

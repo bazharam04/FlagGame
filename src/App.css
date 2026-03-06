@@ -304,6 +304,14 @@
   overflow: hidden;
 }
 
+.wq-page .back-btn {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  margin-bottom: 0;
+  z-index: 10;
+}
+
 /* Back button */
 .back-btn {
   font-family: "Fredoka One", cursive;
@@ -521,9 +529,40 @@
   position: relative;
 }
 
+/* Wrapper: same width as the flag, centered. Badge hangs off the left via absolute. */
+.fd-flag-wrapper {
+  position: relative;
+  width: min(624px, 92vw);
+}
+
+.fd-visited-badge {
+  position: absolute;
+  left: -182px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 162px;
+  height: 162px;
+  border-radius: 50%;
+  background: #e74c3c;
+  box-shadow: 0 8px 0 #922b21, 0 14px 36px rgba(0,0,0,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Fredoka One", cursive;
+  font-size: 4rem;
+  color: #fff;
+  z-index: 2;
+  animation: badgePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes badgePop {
+  from { transform: translateY(-50%) scale(0.3); opacity: 0; }
+  to   { transform: translateY(-50%) scale(1);   opacity: 1; }
+}
+
 /* Flag image frame — 20% taller: max-height 52vh → 62vh */
 .fd-flag-frame {
-  width: min(624px, 92vw);
+  width: 100%;
   max-height: 62vh;
   aspect-ratio: 3 / 2;
   border-radius: 24px;
@@ -817,6 +856,57 @@
   to   { transform: scale(1);   opacity: 1; }
 }
 
+.award-count-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin: 4px 0 0;
+}
+
+.award-count-number {
+  font-family: "Fredoka One", cursive;
+  font-size: clamp(4rem, 16vw, 7rem);
+  line-height: 1;
+  background: linear-gradient(135deg, var(--aw1), var(--aw2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 4px 0 rgba(0,0,0,0.15));
+  animation: countPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes countPop {
+  from { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+  to   { transform: scale(1)   rotate(0deg);   opacity: 1; }
+}
+
+.award-count-label {
+  font-family: "Fredoka One", cursive;
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  letter-spacing: 3px;
+  background: linear-gradient(135deg, var(--aw1), var(--aw2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.award-name {
+  font-family: "Fredoka One", cursive;
+  font-size: clamp(1.1rem, 4vw, 1.5rem);
+  color: #e74c3c;
+  margin: 0;
+  letter-spacing: 1px;
+  animation: nameWiggle 0.6s ease-in-out both;
+  animation-delay: 0.3s;
+}
+
+@keyframes nameWiggle {
+  0%   { transform: scale(0.5) rotate(-5deg); opacity: 0; }
+  60%  { transform: scale(1.1) rotate(3deg);  opacity: 1; }
+  100% { transform: scale(1)   rotate(0deg);  opacity: 1; }
+}
+
 .award-title {
   font-family: "Fredoka One", cursive;
   font-size: clamp(1.8rem, 6vw, 2.8rem);
@@ -915,4 +1005,5 @@
 @media (max-width: 480px) {
   .award-card { padding: 28px 24px 24px; }
   .award-trophy { font-size: 4rem; }
+  .fd-visited-badge { width: 70px; height: 70px; font-size: 1.8rem; left: -80px; }
 }
