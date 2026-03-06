@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { flags } from "../data/flags";
 
 const PARTICLE_COLORS = [
@@ -21,6 +22,46 @@ const BURST_POSITIONS = [
 
 const ANGLES = [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330];
 
+function playClapping() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+    function clap(time) {
+      const bufferSize = Math.floor(ctx.sampleRate * 0.12);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1);
+      }
+
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+
+      const hipass = ctx.createBiquadFilter();
+      hipass.type = "highpass";
+      hipass.frequency.value = 1200;
+
+      const gainNode = ctx.createGain();
+      gainNode.gain.setValueAtTime(0.9, time);
+      gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.18);
+
+      source.connect(hipass);
+      hipass.connect(gainNode);
+      gainNode.connect(ctx.destination);
+      source.start(time);
+    }
+
+    const now = ctx.currentTime;
+    // Two quick bursts of claps — applause feel
+    [0, 0.22, 0.44, 0.66, 0.88, 1.05, 1.22, 1.39, 1.52, 1.65].forEach((t) => clap(now + t));
+
+    // Auto-close the context after clapping finishes
+    setTimeout(() => ctx.close(), 2200);
+  } catch (_) {
+    // Web Audio not available — silently skip
+  }
+}
+
 function Burst({ left, top, delay }) {
   return (
     <div className="fw-burst" style={{ left, top }}>
@@ -43,9 +84,13 @@ function Burst({ left, top, delay }) {
 export default function AwardBanner({ award, onClose }) {
   const visitedIds = JSON.parse(localStorage.getItem("adhi-visited-flags") || "[]");
   const showcaseFlags = visitedIds
-    .slice(-5)                                         // last 5 visited
+    .slice(-5)
     .map((id) => flags.find((f) => f.id === id))
     .filter(Boolean);
+
+  useEffect(() => {
+    playClapping();
+  }, []);
 
   return (
     <div className="award-overlay" onClick={onClose}>
@@ -64,7 +109,7 @@ export default function AwardBanner({ award, onClose }) {
       >
         <div className="award-trophy">{award.trophy}</div>
 
-        <p className="award-unlocked-label">✨ AWARD UNLOCKED ✨</p>
+        <p className="award-unlocked-label">👏 MILESTONE REACHED! 👏</p>
 
         <h2 className="award-title">{award.title}</h2>
 
@@ -95,7 +140,7 @@ export default function AwardBanner({ award, onClose }) {
           }}
           onClick={onClose}
         >
-          🎉 AWESOME!
+          YAY! 👏 KEEP GOING!
         </button>
       </div>
     </div>

@@ -805,10 +805,16 @@
 
 .award-unlocked-label {
   font-family: "Fredoka One", cursive;
-  font-size: 1rem;
-  color: #f39c12;
+  font-size: 1.1rem;
+  color: #e74c3c;
   letter-spacing: 2px;
   margin: 0;
+  animation: labelPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes labelPop {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
 }
 
 .award-title {
