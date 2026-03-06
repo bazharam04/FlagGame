@@ -560,6 +560,23 @@
   to   { transform: translateY(-50%) scale(1);   opacity: 1; }
 }
 
+.fd-flag-number {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: "Fredoka One", cursive;
+  font-size: 1.5rem;
+  color: #fff;
+  background: var(--d-color, #555);
+  padding: 4px 20px;
+  border-radius: 30px;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+  letter-spacing: 1px;
+  z-index: 3;
+  white-space: nowrap;
+}
+
 /* Flag image frame — 20% taller: max-height 52vh → 62vh */
 .fd-flag-frame {
   width: 100%;

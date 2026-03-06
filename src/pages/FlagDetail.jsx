@@ -115,6 +115,7 @@ export default function FlagDetail() {
       {/* Flag image */}
       <div className="fd-flag-wrapper">
         <div className="fd-visited-badge">{visitedCount}</div>
+        <div className="fd-flag-number">#{flag.id}</div>
         <div
           className={`fd-flag-frame ${imgLoaded ? "fd-flag-frame--loaded" : ""}`}
           onClick={handleFlagClick}
